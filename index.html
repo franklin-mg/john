@@ -292,11 +292,43 @@
             width: 22px;
             height: 22px;
         }
+
+        /* Banner de instalación personalizado */
+        #pwa-install-banner {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: var(--fatla-navy);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            z-index: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: left;
+            border: 1px solid var(--fatla-gold);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+    <!-- Banner de Instalación -->
+    <div id="pwa-install-banner">
+        <p style="font-size: 0.8rem; margin-bottom: 10px; font-weight: 400;">¿Quieres instalar la App de <b>Planeta FATLA</b> en tu teléfono?</p>
+        <div style="display: flex; gap: 10px;">
+            <button id="btn-install-now" style="background: var(--fatla-gold); border:none; padding: 8px 15px; border-radius: 8px; color: white; font-weight: 600; font-size: 0.75rem; cursor: pointer;">Instalar ahora</button>
+            <button id="btn-install-close" style="background: transparent; border: 1px solid rgba(255,255,255,0.3); padding: 8px 15px; border-radius: 8px; color: white; font-size: 0.75rem; cursor: pointer;">Más tarde</button>
+        </div>
+    </div>
+
     <!-- Pantalla Inicial -->
     <div id="screen-home" class="screen active">
         <div class="brand-header">
@@ -387,9 +419,13 @@
     const portalTitle = document.getElementById('portal-title');
     const portalIcon = document.getElementById('portal-icon');
     const btnGo = document.getElementById('btn-go');
+    const installBanner = document.getElementById('pwa-install-banner');
+    const btnInstallNow = document.getElementById('btn-install-now');
+    const btnInstallClose = document.getElementById('btn-install-close');
 
     let currentViewState = 'home';
     let targetUrl = '';
+    let deferredPrompt;
 
     const iconPaths = {
         'Primavera': 'https://i.postimg.cc/zvxGNQ9v/primavera.png',
@@ -413,31 +449,48 @@
         switchScreen('portal');
     }
 
-    // Registro del Service Worker optimizado para entornos de previsualización
+    // Registro seguro del Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            // Verificamos si la página actual es un blob o un entorno seguro antes de intentar registrar
-            if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
+            const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            const isNotPreview = !window.location.href.includes('usercontent.goog');
+            
+            if (isSecure && isNotPreview) {
                 navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registrado:', reg.scope))
-                    .catch(err => {
-                        // Capturamos el error sin detener la ejecución de la app
-                        console.log('El registro del SW es ignorado en la previsualización, pero funcionará en producción.');
-                    });
-            } else {
-                console.log('Service Worker no registrado: Entorno no seguro o previsualización detectada.');
+                    .then(reg => console.log('PWA: Service Worker activo.'))
+                    .catch(err => console.log('PWA: Error en SW.', err));
             }
         });
     }
 
-    // Manejo de instalación PWA
-    let deferredPrompt;
+    // Detección de instalación para navegadores compatibles (Chrome/Android)
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        // Solo mostramos el banner si estamos en la pantalla inicial para no molestar
+        if (currentViewState === 'home') {
+            installBanner.style.display = 'block';
+        }
     });
 
-    startBtn.onclick = () => switchScreen('selection');
+    btnInstallNow.onclick = async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Instalación: ${outcome}`);
+            deferredPrompt = null;
+            installBanner.style.display = 'none';
+        }
+    };
+
+    btnInstallClose.onclick = () => {
+        installBanner.style.display = 'none';
+    };
+
+    startBtn.onclick = () => {
+        switchScreen('selection');
+        installBanner.style.display = 'none'; // Cerramos el banner al entrar
+    };
     
     backBtn.onclick = () => {
         if (currentViewState === 'portal') switchScreen('selection');
@@ -447,6 +500,12 @@
     btnGo.onclick = () => {
         if (targetUrl) window.open(targetUrl, '_blank');
     };
+
+    // Escuchar si la App ya fue instalada
+    window.addEventListener('appinstalled', () => {
+        console.log('PWA instalada con éxito.');
+        installBanner.style.display = 'none';
+    });
 </script>
 
 </body>
