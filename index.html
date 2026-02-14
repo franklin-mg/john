@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Planeta FATLA - IA Generativa</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#050a1d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FATLA IA">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png">
+    
+    <!-- Manifest link -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Fuente Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fatla-gold: #d49a12; 
+            --fatla-navy: #050a1d; 
+            --bg-outer: #e0e4e8;
+            --container-cream: #f2ede4; 
+            --text-dark: #050a1d;
+            --winter-turquoise: #007C91; 
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-outer);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow: hidden; 
+        }
+
+        .app-container {
+            width: 90%;
+            max-width: 400px;
+            height: 640px;
+            background-color: var(--container-cream);
+            text-align: center;
+            border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border: 1px solid rgba(212, 154, 18, 0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+
+        /* Pantallas */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            animation: fadeIn 0.3s ease-out;
+            padding: 25px 25px 0 25px;
+            position: relative;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Encabezado */
+        .brand-header {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 5px;
+            z-index: 10;
+        }
+
+        .brand-logo {
+            height: 38px; 
+            width: auto;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
+        h1 {
+            font-size: 1.65rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: var(--fatla-navy);
+            letter-spacing: -0.5px;
+        }
+
+        .diplomado-text {
+            font-weight: 600;
+            color: var(--fatla-gold);
+            font-size: 0.88rem;
+            margin-bottom: 25px; 
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            line-height: 1.3;
+        }
+
+        .subtitle-selection {
+            color: var(--fatla-navy);
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 10px; 
+            padding: 0 5px;
+            text-align: center;
+        }
+
+        /* Contenedor principal de selección */
+        .selection-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Grupo de iconos */
+        .main-icons-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Grid de Iconos */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            padding: 0 10px;
+            margin-bottom: 20px;
+        }
+
+        .course-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid transparent;
+        }
+
+        .course-card:active { 
+            transform: scale(0.95);
+            background: white;
+            border-color: var(--fatla-gold);
+        }
+
+        .season-avatar {
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            mix-blend-mode: multiply;
+        }
+
+        .course-label {
+            font-weight: 600;
+            color: var(--fatla-navy);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        /* Franja Winter - Extremo a extremo */
+        .winter-stripe-wrapper {
+            width: calc(100% + 50px); /* Compensa el padding de 25px del padre */
+            margin-left: -25px;
+            height: 120px;
+            background-color: var(--winter-turquoise);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .winter-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 10px 30px;
+        }
+
+        .winter-card:active {
+            transform: scale(0.95);
+        }
+
+        .winter-card img {
+            width: 70px; 
+            height: 70px; 
+            margin-bottom: 4px;
+        }
+
+        .winter-label {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Pantalla Browser / Link Externo */
+        .link-portal-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .portal-card {
+            background: white;
+            width: 100%;
+            border-radius: 25px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portal-icon-big {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-open-campus {
+            background: linear-gradient(135deg, var(--fatla-gold), #b3820f);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(212, 154, 18, 0.3);
+        }
+
+        .btn-open-campus:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(212, 154, 18, 0.3);
+        }
+
+        /* Footer */
+        .footer-bar {
+            background-color: #000000;
+            color: #ffffff;
+            width: 100%;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 0 0 35px 35px;
+            z-index: 200;
+            margin-top: auto; 
+        }
+
+        .footer-text {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .btn-return {
+            position: absolute;
+            left: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: none;
+            padding: 8px;
+        }
+
+        .btn-return svg {
+            stroke: #ffffff;
+            width: 22px;
+            height: 22px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- PANTALLA 1: HOME -->
+    <div id="screen-home" class="screen active">
+        <div class="brand-header">
+            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h1>¡Bienvenido!</h1>
+            <div class="diplomado-text">Diplomado Inteligencia Artificial Generativa</div>
+            <div id="start-btn" style="cursor:pointer; width: 100%; max-width: 280px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://i.postimg.cc/nL5H37qJ/fraternidad.png" style="width: 100%; border-radius: 15px; mix-blend-mode: multiply;" alt="Entrar">
+            </div>
+            <p style="font-size: 0.75rem; color: var(--fatla-gold); font-weight: 600; margin-top: 25px; text-transform: uppercase; letter-spacing: 1px;">Toca la imagen para ingresar</p>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: SELECCIÓN -->
+    <div id="screen-selection" class="screen">
+        <div class="brand-header">
+            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+        </div>
+        <p class="subtitle-selection">Selecciona tu edición académica para navegar en el campus</p>
+
+        <div class="selection-body">
+            <div class="main-icons-group">
+                <div class="grid-menu">
+                    <div class="course-card" onclick="prepareNavigation('Primavera', 'https://john.fatla.academy/2025/course/index.php?categoryid=2')">
+                        <img src="https://i.postimg.cc/zvxGNQ9v/primavera.png" class="season-avatar">
+                        <span class="course-label">Primavera</span>
+                    </div>
+                    <div class="course-card" onclick="prepareNavigation('Verano', 'https://john.fatla.academy/2025/course/index.php?categoryid=3')">
+                        <img src="https://i.postimg.cc/3r1R2yWv/verano.png" class="season-avatar">
+                        <span class="course-label">Verano</span>
+                    </div>
+                    <div class="course-card" onclick="prepareNavigation('Otoño', 'https://john.fatla.academy/2025/course/index.php?categoryid=4')">
+                        <img src="https://i.postimg.cc/tJB4bcLT/otoño.png" class="season-avatar">
+                        <span class="course-label">Otoño</span>
+                    </div>
+                    <div class="course-card" onclick="prepareNavigation('Invierno', 'https://john.fatla.academy/2025/course/index.php?categoryid=1')">
+                        <img src="https://i.postimg.cc/fy8RsP6b/invierno.png" class="season-avatar">
+                        <span class="course-label">Invierno</span>
+                    </div>
+                </div>
+
+                <div class="winter-stripe-wrapper">
+                    <div class="winter-card" onclick="prepareNavigation('Winter', 'https://john.fatla.academy/2025/course/index.php?categoryid=5')">
+                        <img src="https://i.postimg.cc/tJYsmyMz/winter.png">
+                        <span class="winter-label">Winter</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: PORTAL DE SALIDA -->
+    <div id="screen-portal" class="screen">
+        <div class="brand-header">
+            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+        </div>
+        
+        <div class="link-portal-container">
+            <div class="portal-card">
+                <img id="portal-icon" src="" class="portal-icon-big">
+                <h2 id="portal-title" style="color: var(--fatla-navy); font-size: 1.2rem; margin-bottom: 5px;">Edición</h2>
+                <p style="font-size: 0.8rem; color: #666; text-align: center; margin-bottom: 10px;">Estás por ingresar al Campus Virtual de Planeta FATLA.</p>
+                <button id="btn-go" class="btn-open-campus">Entrar al Campus</button>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.7rem; color: #999;">Se abrirá en una ventana nueva por seguridad.</p>
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA -->
+    <div class="footer-bar">
+        <button id="back-btn" class="btn-return">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+        </button>
+        <span class="footer-text">Comunidad Digital</span>
+    </div>
+</div>
+
+<script>
+    const screens = {
+        home: document.getElementById('screen-home'),
+        selection: document.getElementById('screen-selection'),
+        portal: document.getElementById('screen-portal')
+    };
+
+    const backBtn = document.getElementById('back-btn');
+    const startBtn = document.getElementById('start-btn');
+    const portalTitle = document.getElementById('portal-title');
+    const portalIcon = document.getElementById('portal-icon');
+    const btnGo = document.getElementById('btn-go');
+
+    let currentViewState = 'home';
+    let targetUrl = '';
+
+    const iconPaths = {
+        'Primavera': 'https://i.postimg.cc/zvxGNQ9v/primavera.png',
+        'Verano': 'https://i.postimg.cc/3r1R2yWv/verano.png',
+        'Otoño': 'https://i.postimg.cc/tJB4bcLT/otoño.png',
+        'Invierno': 'https://i.postimg.cc/fy8RsP6b/invierno.png',
+        'Winter': 'https://i.postimg.cc/tJYsmyMz/winter.png'
+    };
+
+    function switchScreen(target) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        screens[target].classList.add('active');
+        currentViewState = target;
+        backBtn.style.display = (target === 'home') ? 'none' : 'block';
+    }
+
+    function prepareNavigation(name, url) {
+        targetUrl = url;
+        portalTitle.innerText = `Edición ${name}`;
+        portalIcon.src = iconPaths[name];
+        switchScreen('portal');
+    }
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registrado.', reg))
+                .catch(err => console.log('Error al registrar Service Worker.', err));
+        });
+    }
+
+    // Eventos
+    startBtn.onclick = () => switchScreen('selection');
+    
+    backBtn.onclick = () => {
+        if (currentViewState === 'portal') switchScreen('selection');
+        else if (currentViewState === 'selection') switchScreen('home');
+    };
+
+    btnGo.onclick = () => {
+        if (targetUrl) {
+            window.open(targetUrl, '_blank');
+        }
+    };
+
+    // Prevent zoom on double tap for mobile
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) e.preventDefault();
+    }, {passive: false});
+</script>
+
+</body>
+</html>
