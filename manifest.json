@@ -9,13 +9,13 @@
 "orientation": "portrait",
 "icons": [
 {
-"src": "https://www.google.com/search?q=https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
+"src": "https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
 "sizes": "192x192",
 "type": "image/png",
 "purpose": "any maskable"
 },
 {
-"src": "https://www.google.com/search?q=https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
+"src": "https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
 "sizes": "512x512",
 "type": "image/png"
 }
