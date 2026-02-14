@@ -1,28 +1,41 @@
-const CACHE_NAME = 'fatla-ia-v1';
+/**
+ * Planeta FATLA - Service Worker
+ * Gestiona la carga offline y el almacenamiento en caché de recursos locales.
+ */
+
+const CACHE_NAME = 'fatla-ia-v2';
+
+// Lista de recursos locales para precargar
 const ASSETS_TO_CACHE = [
   'index.html',
   'manifest.json',
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap',
-  'https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png',
-  'https://i.postimg.cc/nL5H37qJ/fraternidad.png'
+  'icono-app-fatla.png',
+  'fraternidad.png',
+  'primavera.png',
+  'verano.png',
+  'otoño.png',
+  'invierno.png',
+  'winter.png'
 ];
 
-// Instalación: Cachear archivos estáticos
+// Evento de instalación: guarda los archivos en el caché del navegador
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('SW: Cacheando archivos locales...');
+      return cache.addAll(ASSETS_TO_CACHE);
+    })
   );
 });
 
-// Activación: Limpiar caches antiguos
+// Evento de activación: limpia versiones antiguas del caché
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
+            console.log('SW: Borrando caché antiguo:', cache);
             return caches.delete(cache);
           }
         })
@@ -31,11 +44,12 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estrategia: Network First con fallback a Cache
+// Estrategia de respuesta: Cache First (Priorizar caché, si no existe buscar en red)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
+    caches.match(event.request).then((response) => {
+      // Retorna el archivo del caché o realiza la petición a la red
+      return response || fetch(event.request);
     })
   );
 });
