@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FATLA IA">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png">
+    <link rel="apple-touch-icon" href="icono-app-fatla.png">
     
     <!-- Manifest link -->
     <link rel="manifest" href="manifest.json">
@@ -332,13 +332,13 @@
     <!-- Pantalla Inicial -->
     <div id="screen-home" class="screen active">
         <div class="brand-header">
-            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+            <img src="icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
         </div>
         <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <h1>¡Bienvenido!</h1>
             <div class="diplomado-text">Diplomado Inteligencia Artificial Generativa</div>
             <div id="start-btn" style="cursor:pointer; width: 100%; max-width: 280px;">
-                <img src="https://i.postimg.cc/nL5H37qJ/fraternidad.png" style="width: 100%; border-radius: 15px; mix-blend-mode: multiply;" alt="Entrar">
+                <img src="fraternidad.png" style="width: 100%; border-radius: 15px; mix-blend-mode: multiply;" alt="Entrar">
             </div>
             <p style="font-size: 0.75rem; color: var(--fatla-gold); font-weight: 600; margin-top: 25px; text-transform: uppercase; letter-spacing: 1px;">Toca la imagen para ingresar</p>
         </div>
@@ -347,32 +347,32 @@
     <!-- Pantalla de Selección -->
     <div id="screen-selection" class="screen">
         <div class="brand-header">
-            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+            <img src="icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
         </div>
         <p class="subtitle-selection">Selecciona tu edición académica para navegar en el campus</p>
         <div class="selection-body">
             <div class="main-icons-group">
                 <div class="grid-menu">
                     <div class="course-card" onclick="prepareNavigation('Primavera', 'https://john.fatla.academy/2025/course/index.php?categoryid=2')">
-                        <img src="https://i.postimg.cc/zvxGNQ9v/primavera.png" class="season-avatar">
+                        <img src="primavera.png" class="season-avatar">
                         <span class="course-label">Primavera</span>
                     </div>
                     <div class="course-card" onclick="prepareNavigation('Verano', 'https://john.fatla.academy/2025/course/index.php?categoryid=3')">
-                        <img src="https://i.postimg.cc/3r1R2yWv/verano.png" class="season-avatar">
+                        <img src="verano.png" class="season-avatar">
                         <span class="course-label">Verano</span>
                     </div>
                     <div class="course-card" onclick="prepareNavigation('Otoño', 'https://john.fatla.academy/2025/course/index.php?categoryid=4')">
-                        <img src="https://i.postimg.cc/tJB4bcLT/otoño.png" class="season-avatar">
+                        <img src="otoño.png" class="season-avatar">
                         <span class="course-label">Otoño</span>
                     </div>
                     <div class="course-card" onclick="prepareNavigation('Invierno', 'https://john.fatla.academy/2025/course/index.php?categoryid=1')">
-                        <img src="https://i.postimg.cc/fy8RsP6b/invierno.png" class="season-avatar">
+                        <img src="invierno.png" class="season-avatar">
                         <span class="course-label">Invierno</span>
                     </div>
                 </div>
                 <div class="winter-stripe-wrapper">
                     <div class="winter-card" onclick="prepareNavigation('Winter', 'https://john.fatla.academy/2025/course/index.php?categoryid=5')">
-                        <img src="https://i.postimg.cc/tJYsmyMz/winter.png">
+                        <img src="winter.png">
                         <span class="winter-label">Winter</span>
                     </div>
                 </div>
@@ -383,7 +383,7 @@
     <!-- Pantalla de Portal -->
     <div id="screen-portal" class="screen">
         <div class="brand-header">
-            <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
+            <img src="icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
         </div>
         <div class="link-portal-container">
             <div class="portal-card">
@@ -428,11 +428,11 @@
     let deferredPrompt;
 
     const iconPaths = {
-        'Primavera': 'https://i.postimg.cc/zvxGNQ9v/primavera.png',
-        'Verano': 'https://i.postimg.cc/3r1R2yWv/verano.png',
-        'Otoño': 'https://i.postimg.cc/tJB4bcLT/otoño.png',
-        'Invierno': 'https://i.postimg.cc/fy8RsP6b/invierno.png',
-        'Winter': 'https://i.postimg.cc/tJYsmyMz/winter.png'
+        'Primavera': 'primavera.png',
+        'Verano': 'verano.png',
+        'Otoño': 'otoño.png',
+        'Invierno': 'invierno.png',
+        'Winter': 'winter.png'
     };
 
     function switchScreen(target) {
@@ -467,7 +467,6 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Solo mostramos el banner si estamos en la pantalla inicial para no molestar
         if (currentViewState === 'home') {
             installBanner.style.display = 'block';
         }
@@ -489,7 +488,7 @@
 
     startBtn.onclick = () => {
         switchScreen('selection');
-        installBanner.style.display = 'none'; // Cerramos el banner al entrar
+        installBanner.style.display = 'none';
     };
     
     backBtn.onclick = () => {
@@ -501,7 +500,6 @@
         if (targetUrl) window.open(targetUrl, '_blank');
     };
 
-    // Escuchar si la App ya fue instalada
     window.addEventListener('appinstalled', () => {
         console.log('PWA instalada con éxito.');
         installBanner.style.display = 'none';
@@ -510,3 +508,4 @@
 
 </body>
 </html>
+        
