@@ -61,7 +61,6 @@
             overflow: hidden; 
         }
 
-        /* Pantallas */
         .screen {
             display: none;
             flex-direction: column;
@@ -81,7 +80,6 @@
             to { opacity: 1; }
         }
 
-        /* Encabezado */
         .brand-header {
             display: flex;
             justify-content: flex-start;
@@ -124,7 +122,6 @@
             text-align: center;
         }
 
-        /* Contenedor principal de selección */
         .selection-body {
             flex-grow: 1;
             display: flex;
@@ -132,7 +129,6 @@
             justify-content: center;
         }
 
-        /* Grupo de iconos */
         .main-icons-group {
             display: flex;
             flex-direction: column;
@@ -140,7 +136,6 @@
             width: 100%;
         }
 
-        /* Grid de Iconos */
         .grid-menu {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -184,9 +179,8 @@
             text-transform: uppercase;
         }
 
-        /* Franja Winter - Extremo a extremo */
         .winter-stripe-wrapper {
-            width: calc(100% + 50px); /* Compensa el padding de 25px del padre */
+            width: calc(100% + 50px);
             margin-left: -25px;
             height: 120px;
             background-color: var(--winter-turquoise);
@@ -206,10 +200,6 @@
             padding: 10px 30px;
         }
 
-        .winter-card:active {
-            transform: scale(0.95);
-        }
-
         .winter-card img {
             width: 70px; 
             height: 70px; 
@@ -224,7 +214,6 @@
             letter-spacing: 2px;
         }
 
-        /* Pantalla Browser / Link Externo */
         .link-portal-container {
             flex-grow: 1;
             display: flex;
@@ -249,13 +238,6 @@
             width: 100px;
             height: 100px;
             margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
         .btn-open-campus {
@@ -274,12 +256,6 @@
             box-shadow: 0 5px 15px rgba(212, 154, 18, 0.3);
         }
 
-        .btn-open-campus:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 5px rgba(212, 154, 18, 0.3);
-        }
-
-        /* Footer */
         .footer-bar {
             background-color: #000000;
             color: #ffffff;
@@ -316,14 +292,12 @@
             width: 22px;
             height: 22px;
         }
-
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
-    <!-- PANTALLA 1: HOME -->
+    <!-- Pantalla Inicial -->
     <div id="screen-home" class="screen active">
         <div class="brand-header">
             <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
@@ -331,20 +305,19 @@
         <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <h1>¡Bienvenido!</h1>
             <div class="diplomado-text">Diplomado Inteligencia Artificial Generativa</div>
-            <div id="start-btn" style="cursor:pointer; width: 100%; max-width: 280px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+            <div id="start-btn" style="cursor:pointer; width: 100%; max-width: 280px;">
                 <img src="https://i.postimg.cc/nL5H37qJ/fraternidad.png" style="width: 100%; border-radius: 15px; mix-blend-mode: multiply;" alt="Entrar">
             </div>
             <p style="font-size: 0.75rem; color: var(--fatla-gold); font-weight: 600; margin-top: 25px; text-transform: uppercase; letter-spacing: 1px;">Toca la imagen para ingresar</p>
         </div>
     </div>
 
-    <!-- PANTALLA 2: SELECCIÓN -->
+    <!-- Pantalla de Selección -->
     <div id="screen-selection" class="screen">
         <div class="brand-header">
             <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
         </div>
         <p class="subtitle-selection">Selecciona tu edición académica para navegar en el campus</p>
-
         <div class="selection-body">
             <div class="main-icons-group">
                 <div class="grid-menu">
@@ -365,7 +338,6 @@
                         <span class="course-label">Invierno</span>
                     </div>
                 </div>
-
                 <div class="winter-stripe-wrapper">
                     <div class="winter-card" onclick="prepareNavigation('Winter', 'https://john.fatla.academy/2025/course/index.php?categoryid=5')">
                         <img src="https://i.postimg.cc/tJYsmyMz/winter.png">
@@ -376,12 +348,11 @@
         </div>
     </div>
 
-    <!-- PANTALLA 3: PORTAL DE SALIDA -->
+    <!-- Pantalla de Portal -->
     <div id="screen-portal" class="screen">
         <div class="brand-header">
             <img src="https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png" alt="Planeta FATLA" class="brand-logo">
         </div>
-        
         <div class="link-portal-container">
             <div class="portal-card">
                 <img id="portal-icon" src="" class="portal-icon-big">
@@ -393,7 +364,7 @@
         </div>
     </div>
 
-    <!-- PIE DE PÁGINA -->
+    <!-- Barra de Navegación Inferior -->
     <div class="footer-bar">
         <button id="back-btn" class="btn-return">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
@@ -442,16 +413,30 @@
         switchScreen('portal');
     }
 
-    // Service Worker Registration
+    // Registro del Service Worker optimizado para entornos de previsualización
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registrado.', reg))
-                .catch(err => console.log('Error al registrar Service Worker.', err));
+            // Verificamos si la página actual es un blob o un entorno seguro antes de intentar registrar
+            if (window.location.protocol === 'https:' || window.location.hostname === 'localhost') {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado:', reg.scope))
+                    .catch(err => {
+                        // Capturamos el error sin detener la ejecución de la app
+                        console.log('El registro del SW es ignorado en la previsualización, pero funcionará en producción.');
+                    });
+            } else {
+                console.log('Service Worker no registrado: Entorno no seguro o previsualización detectada.');
+            }
         });
     }
 
-    // Eventos
+    // Manejo de instalación PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
     startBtn.onclick = () => switchScreen('selection');
     
     backBtn.onclick = () => {
@@ -460,15 +445,8 @@
     };
 
     btnGo.onclick = () => {
-        if (targetUrl) {
-            window.open(targetUrl, '_blank');
-        }
+        if (targetUrl) window.open(targetUrl, '_blank');
     };
-
-    // Prevent zoom on double tap for mobile
-    document.addEventListener('touchstart', function(e) {
-        if (e.touches.length > 1) e.preventDefault();
-    }, {passive: false});
 </script>
 
 </body>
