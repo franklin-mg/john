@@ -1,7 +1,7 @@
 {
 "name": "Planeta FATLA - IA Generativa",
 "short_name": "FATLA IA",
-"description": "Acceso directo a las ediciones académicas de Planeta FATLA",
+"description": "App oficial del Diplomado en Inteligencia Artificial Generativa de Planeta FATLA",
 "start_url": "index.html",
 "display": "standalone",
 "background_color": "#f2ede4",
@@ -9,13 +9,13 @@
 "orientation": "portrait",
 "icons": [
 {
-"src": "https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
+"src": "icono-app-fatla.png",
 "sizes": "192x192",
 "type": "image/png",
 "purpose": "any maskable"
 },
 {
-"src": "https://i.postimg.cc/1t1kgtyg/icono-app-fatla.png",
+"src": "icono-app-fatla.png",
 "sizes": "512x512",
 "type": "image/png"
 }
